@@ -63,6 +63,7 @@ export const authOptions = {
       if (session?.user) {
         session.user.roles = token.roles || [];
       }
+      console.log("Session working");
       return session;
     },
   },

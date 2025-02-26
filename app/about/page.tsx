@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function AboutPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [isLoadingRoles, setIsLoadingRoles] = useState(true);
 
   useEffect(() => {
@@ -14,9 +14,12 @@ export default function AboutPage() {
 
     if (session?.user?.roles && session.user.roles.length > 0) {
       console.log("Setting isLoadingRoles to false");
-      setIsLoadingRoles(false);
     }
-  }, [session, status]);
+    if (!session?.user.roles) {
+      update();
+    }
+    setIsLoadingRoles(false);
+  }, [session, status, update]);
 
   return (
     <div className="p-4">
