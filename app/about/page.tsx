@@ -1,25 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useUserSession } from "../hooks/useUserSession";
 
 export default function AboutPage() {
-  const { data: session, status, update } = useSession();
-  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
-
-  useEffect(() => {
-    console.log("Session status:", status);
-    console.log("Session data:", session);
-    console.log("Current roles:", session?.user?.roles);
-
-    if (session?.user?.roles && session.user.roles.length > 0) {
-      console.log("Setting isLoadingRoles to false");
-    }
-    if (!session?.user.roles) {
-      update();
-    }
-    setIsLoadingRoles(false);
-  }, [session, status, update]);
+  const { isLoading, isLoadingRoles, session, roles } = useUserSession();
 
   return (
     <div className="p-4">
@@ -27,7 +11,7 @@ export default function AboutPage() {
 
       <div className="mt-4">
         <h2 className="text-xl mb-2">Your Account</h2>
-        {status === "loading" ? (
+        {isLoading ? (
           <p>Loading...</p>
         ) : session?.user ? (
           <>
@@ -37,7 +21,7 @@ export default function AboutPage() {
               {isLoadingRoles ? (
                 <span>Loading roles...</span>
               ) : (
-                session.user.roles.join(", ") || "No roles assigned"
+                roles.join(", ") || "No roles assigned"
               )}
             </p>
           </>
